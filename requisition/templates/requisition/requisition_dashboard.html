@@ -32,8 +32,8 @@
   </h2>
 </div>
 
-    <!-- 🧾 Basic Information Section -->
-{% if not is_admin %}
+   <!-- 🧾 Basic Information Section -->
+{% if not readonly %}
 <div class="form-card">
   <h2 class="section-title">
     <!-- Left-side smart info icon -->
@@ -42,7 +42,7 @@
     <!-- Right-side toggle button -->
     <span id="toggle-icon">
       <button id="toggle-btn" class="btn-red" type="button" onclick="toggleForm()">
-        <i class="fa fa-chevron-down"></i>
+        Toggle
       </button>
     </span>
   </h2>
@@ -75,9 +75,9 @@
     <h2>
       <i class="fas fa-file-invoice-dollar"></i> REQUISITION FORM
       <span id="toggle-icon">
-        <!-- Bind toggle directly to the button -->
+        <!-- Toggle button without chevron icon -->
         <button id="toggle-btn" class="btn-red" type="button" onclick="toggleForm()">
-          <i class="fa fa-chevron-down"></i>
+          Toggle
         </button>
       </span>
     </h2>
@@ -265,7 +265,6 @@
   document.addEventListener('DOMContentLoaded', function () {
     const form = document.getElementById('formContent');
     const btn = document.getElementById('toggle-btn');
-    const icon = btn ? btn.querySelector('i') : null;
     const requisitionSelect = document.getElementById('id_resource_name_requisition');
     const resourceUnitField = document.getElementById('id_resource_unit_requisition');
     const mode = "{{ mode }}";
@@ -273,16 +272,12 @@
     // Initial state
     if (mode === "edit" && form && btn) {
       form.style.display = 'block';
-      btn.classList.replace('btn-red', 'btn-blue');
-      if (icon) {
-        icon.classList.replace('fa-chevron-down', 'fa-chevron-up');
-      }
+      btn.classList.remove('btn-red');
+      btn.classList.add('btn-blue');
     } else if (form && btn) {
       form.style.display = 'none';
-      btn.classList.replace('btn-blue', 'btn-red');
-      if (icon) {
-        icon.classList.replace('fa-chevron-up', 'fa-chevron-down');
-      }
+      btn.classList.remove('btn-blue');
+      btn.classList.add('btn-red');
     }
 
     // Toggle function
@@ -292,11 +287,6 @@
       form.style.display = isHidden ? 'block' : 'none';
       btn.classList.toggle('btn-blue', isHidden);
       btn.classList.toggle('btn-red', !isHidden);
-
-      if (icon) {
-        icon.classList.toggle('fa-chevron-up', isHidden);
-        icon.classList.toggle('fa-chevron-down', !isHidden);
-      }
     };
 
     // Auto-fill resource unit
