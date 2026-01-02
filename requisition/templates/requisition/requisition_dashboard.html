@@ -33,31 +33,36 @@
 </div>
 
    <!-- 🧾 Basic Information Section -->
-   {% if not readonly %}
+{% if not readonly %}
 <div class="form-card">
   <h2 class="section-title">
     <i class="fas fa-info-circle title-icon"></i>
     BASIC INFORMATION 
     <span id="toggle-icon-basic-information">
-      <button id="toggle-btn-basic-information" class="btn-red" type="button" onclick="toggleForm('basic-information')">
-        Toggle
-      </button>
+      <button id="toggle-btn-basic-information" class="btn-red" type="button">Toggle</button>
     </span>
   </h2>
 
   <div id="formContent-basic-information" style="display:none;">
+    <!-- Project Name -->
     <div class="form-row">
       <label for="project-name">Project Name:</label>
       <input type="text" id="project-name" placeholder="Enter project name">
     </div>
+
+    <!-- PR Date -->
     <div class="form-row">
       <label for="pr-date">PR Date:</label>
-      <input type="text" id="pr-date" placeholder="Enter pr date">
+      <input type="text" id="pr-date" placeholder="Enter PR date">
     </div>
+
+    <!-- PR Number -->
     <div class="form-row">
       <label for="pr-no">PR No:</label>
       <input type="text" id="pr-no" placeholder="Enter PR number">
     </div>
+
+    <!-- Delivery Date -->
     <div class="form-row">
       <label for="delivery-date">Delivery Date:</label>
       <input type="text" id="delivery-date" placeholder="Enter delivery date">
@@ -67,21 +72,18 @@
 {% endif %}
 
 <!-- 📝 Requisition Form Section -->
- {% if not readonly %}
+{% if not readonly %}
 <section class="form-section">
-  <header class="form">
+  <header class="form" onclick="toggleForm('requisition-form')">
     <h2>
       <i class="fas fa-file-invoice-dollar"></i> REQUISITION FORM
       <span id="toggle-icon-requisition-form">
-        <!-- Toggle button with unique ID -->
-        <button id="toggle-btn-requisition-form" class="btn-red" type="button" onclick="toggleForm('requisition-form')">
-          Toggle
-        </button>
+        <button id="toggle-btn-requisition-form" class="btn-red" type="button">Toggle</button>
       </span>
     </h2>
   </header>
 
-  <div id="formContent-requisition-form" class="form-content" style="display: none;">
+  <div id="formContent-requisition-form" class="form-content" style="display: block;">
     <form method="post" autocomplete="off">
       {% csrf_token %}
       {{ form.non_field_errors }}
@@ -221,7 +223,6 @@
     const section = "basic-information"; // section identifier
     const form = document.getElementById(`formContent-${section}`);
     const btn = document.getElementById(`toggle-btn-${section}`);
-    const icon = btn ? btn.querySelector('i') : null;
     const mode = "{{ mode }}";
 
     // Initial state
@@ -229,41 +230,34 @@
       form.style.display = 'block';
       btn.classList.remove('btn-red');
       btn.classList.add('btn-blue');
-      if (icon) {
-        icon.classList.remove('fa-chevron-down');
-        icon.classList.add('fa-chevron-up');
-      }
     } else if (form && btn) {
       form.style.display = 'none';
       btn.classList.remove('btn-blue');
       btn.classList.add('btn-red');
-      if (icon) {
-        icon.classList.remove('fa-chevron-up');
-        icon.classList.add('fa-chevron-down');
-      }
     }
 
     // Toggle function
     window.toggleForm = function (sectionName) {
       const formEl = document.getElementById(`formContent-${sectionName}`);
       const btnEl = document.getElementById(`toggle-btn-${sectionName}`);
-      const iconEl = btnEl ? btnEl.querySelector('i') : null;
       if (!formEl || !btnEl) return;
 
       const isHidden = formEl.style.display === 'none' || formEl.style.display === '';
       formEl.style.display = isHidden ? 'block' : 'none';
       btnEl.classList.toggle('btn-blue', isHidden);
       btnEl.classList.toggle('btn-red', !isHidden);
-
-      if (iconEl) {
-        iconEl.classList.toggle('fa-chevron-up', isHidden);
-        iconEl.classList.toggle('fa-chevron-down', !isHidden);
-      }
     };
+
+    // Attach click event
+    if (btn) {
+      btn.addEventListener('click', function () {
+        toggleForm(section);
+      });
+    }
   });
 </script>
 
-<!-- ✅ Toggle + Auto-fill Script -->
+<!-- ✅ Toggle-Script & Auto-fill-Script-(Requisition Form) -->
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     const section = "requisition-form"; // section identifier
@@ -764,7 +758,8 @@ td {
   background-color: #cce4f7;
 }
 
-#formContent {
+/* Form Content-(Basic Information) */
+#formContent-basic-information {
   margin-top: 16px;
   padding: 20px;
   background-color: #f9f9f9;
@@ -775,8 +770,31 @@ td {
   animation: fadeIn 0.3s ease-in-out;
 }
 
-/* Base button style */
-#toggle-btn {
+/* Base button style-(Basic Information) */
+#toggle-btn-basic-information {
+  width: 27px;
+  height: 20px;
+  border: none;
+  cursor: pointer;
+  display: inline-block;
+  border-radius: 4px;
+  position: relative; /* allows movement */
+}
+
+/* Form Content-(Requisition Form) */
+#formContent-requisition-form {
+  margin-top: 16px;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  display: none; /* Hidden by default, toggled via JS */
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Base button style-(Requisition Form) */
+#toggle-btn-requisition-form {
   width: 27px;
   height: 20px;
   border: none;
@@ -786,13 +804,13 @@ td {
   position: relative;          /* allows movement */
 }
 
-/* Red state */
+/* Red state-(Requisition Form & Basic Information) */
 .btn-red {
   background-color: red;
   animation: moveLeft 0.5s ease forwards;
 }
 
-/* Blue state */
+/* Blue state-(Requisition Form & Basic Information)  */
 .btn-blue {
   background-color: #0078d4;
   animation: moveLeft 0.5s ease forwards;
