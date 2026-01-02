@@ -33,21 +33,19 @@
 </div>
 
    <!-- 🧾 Basic Information Section -->
-{% if not readonly %}
+   {% if not readonly %}
 <div class="form-card">
   <h2 class="section-title">
-    <!-- Left-side smart info icon -->
     <i class="fas fa-info-circle title-icon"></i>
     BASIC INFORMATION 
-    <!-- Right-side toggle button -->
-    <span id="toggle-icon">
-      <button id="toggle-btn" class="btn-red" type="button" onclick="toggleForm()">
+    <span id="toggle-icon-basic-information">
+      <button id="toggle-btn-basic-information" class="btn-red" type="button" onclick="toggleForm('basic-information')">
         Toggle
       </button>
     </span>
   </h2>
 
-  <div id="formContent" style="display:none;">
+  <div id="formContent-basic-information" style="display:none;">
     <div class="form-row">
       <label for="project-name">Project Name:</label>
       <input type="text" id="project-name" placeholder="Enter project name">
@@ -69,21 +67,21 @@
 {% endif %}
 
 <!-- 📝 Requisition Form Section -->
-{% if not readonly %}
+ {% if not readonly %}
 <section class="form-section">
   <header class="form">
     <h2>
       <i class="fas fa-file-invoice-dollar"></i> REQUISITION FORM
-      <span id="toggle-icon">
-        <!-- Toggle button without chevron icon -->
-        <button id="toggle-btn" class="btn-red" type="button" onclick="toggleForm()">
+      <span id="toggle-icon-requisition-form">
+        <!-- Toggle button with unique ID -->
+        <button id="toggle-btn-requisition-form" class="btn-red" type="button" onclick="toggleForm('requisition-form')">
           Toggle
         </button>
       </span>
     </h2>
   </header>
 
-  <div id="formContent" class="form-content" style="display: none;">
+  <div id="formContent-requisition-form" class="form-content" style="display: none;">
     <form method="post" autocomplete="off">
       {% csrf_token %}
       {{ form.non_field_errors }}
@@ -220,8 +218,9 @@
 <!-- 🔧 Toggle Script-(Basic Information)-->
 <script>
   document.addEventListener('DOMContentLoaded', function () {
-    const form = document.getElementById('formContent');
-    const btn = document.getElementById('toggle-btn');
+    const section = "basic-information"; // section identifier
+    const form = document.getElementById(`formContent-${section}`);
+    const btn = document.getElementById(`toggle-btn-${section}`);
     const icon = btn ? btn.querySelector('i') : null;
     const mode = "{{ mode }}";
 
@@ -245,16 +244,20 @@
     }
 
     // Toggle function
-    window.toggleForm = function () {
-      if (!form || !btn) return;
-      const isHidden = form.style.display === 'none' || form.style.display === '';
-      form.style.display = isHidden ? 'block' : 'none';
-      btn.classList.toggle('btn-blue', isHidden);
-      btn.classList.toggle('btn-red', !isHidden);
+    window.toggleForm = function (sectionName) {
+      const formEl = document.getElementById(`formContent-${sectionName}`);
+      const btnEl = document.getElementById(`toggle-btn-${sectionName}`);
+      const iconEl = btnEl ? btnEl.querySelector('i') : null;
+      if (!formEl || !btnEl) return;
 
-      if (icon) {
-        icon.classList.toggle('fa-chevron-up', isHidden);
-        icon.classList.toggle('fa-chevron-down', !isHidden);
+      const isHidden = formEl.style.display === 'none' || formEl.style.display === '';
+      formEl.style.display = isHidden ? 'block' : 'none';
+      btnEl.classList.toggle('btn-blue', isHidden);
+      btnEl.classList.toggle('btn-red', !isHidden);
+
+      if (iconEl) {
+        iconEl.classList.toggle('fa-chevron-up', isHidden);
+        iconEl.classList.toggle('fa-chevron-down', !isHidden);
       }
     };
   });
@@ -263,8 +266,9 @@
 <!-- ✅ Toggle + Auto-fill Script -->
 <script>
   document.addEventListener('DOMContentLoaded', function () {
-    const form = document.getElementById('formContent');
-    const btn = document.getElementById('toggle-btn');
+    const section = "requisition-form"; // section identifier
+    const form = document.getElementById(`formContent-${section}`);
+    const btn = document.getElementById(`toggle-btn-${section}`);
     const requisitionSelect = document.getElementById('id_resource_name_requisition');
     const resourceUnitField = document.getElementById('id_resource_unit_requisition');
     const mode = "{{ mode }}";
@@ -281,12 +285,15 @@
     }
 
     // Toggle function
-    window.toggleForm = function () {
-      if (!form || !btn) return;
-      const isHidden = form.style.display === 'none' || form.style.display === '';
-      form.style.display = isHidden ? 'block' : 'none';
-      btn.classList.toggle('btn-blue', isHidden);
-      btn.classList.toggle('btn-red', !isHidden);
+    window.toggleForm = function (sectionName) {
+      const formEl = document.getElementById(`formContent-${sectionName}`);
+      const btnEl = document.getElementById(`toggle-btn-${sectionName}`);
+      if (!formEl || !btnEl) return;
+
+      const isHidden = formEl.style.display === 'none' || formEl.style.display === '';
+      formEl.style.display = isHidden ? 'block' : 'none';
+      btnEl.classList.toggle('btn-blue', isHidden);
+      btnEl.classList.toggle('btn-red', !isHidden);
     };
 
     // Auto-fill resource unit
