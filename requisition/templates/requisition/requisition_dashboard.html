@@ -16,7 +16,7 @@
   {% endif %}
 
 <!-- 🖨️ Print Preview Button -->
-{% if not is_admin %}
+{% if not readonly %}
   <div class="print-controls">
     <button type="button" class="print-button" onclick="printPreview()">🖨️ Print Preview</button>
   </div>
