@@ -101,7 +101,7 @@ class Requisition(models.Model):
     )
 
     def __str__(self):
-        return self.resource_name_requisition.name if self.resource_name_requisition else "No Resource"
+        return f"{self.resource_name_requisition} - {self.requisition_no}"
 
     class Meta:
         ordering = ['-created_at']
