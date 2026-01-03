@@ -585,6 +585,84 @@ td {
   from { opacity: 0; transform: translateY(-5px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+
+/* 📱 Mobile Responsive Enhancements */
+@media (max-width: 768px) {
+  /* Page container */
+  .whole-page {
+    padding: 15px;
+  }
+
+  /* Form grid: stack inputs vertically */
+  .form-grid {
+    grid-template-columns: 1fr;
+    row-gap: 15px;
+  }
+
+  /* Buttons: full width for easier tapping */
+  .form-actions .btn,
+  .btn.green,
+  .btn.gray {
+    width: 100% !important;
+    margin: 8px 0 !important;
+    height: auto;
+  }
+
+  /* Filter section: stack search + button */
+  .filter-section form {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .filter-section input[type="text"],
+  .filter-section .btn.blue {
+    width: 100% !important;
+  }
+
+  /* Table: convert rows into card style */
+  .table-section table,
+  .table-section thead,
+  .table-section tbody,
+  .table-section th,
+  .table-section td,
+  .table-section tr {
+    display: block;
+    width: 100%;
+  }
+
+  .table-section tr {
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  }
+
+  .table-section td {
+    border: none;
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    font-size: 14px;
+  }
+
+  .table-section td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: #0078d4;
+  }
+
+  /* Pagination: stack links */
+  .pagination {
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+  }
+  .page-link {
+    width: 100%;
+    text-align: center;
+  }
+}
 </style>
 
 {% endblock %}

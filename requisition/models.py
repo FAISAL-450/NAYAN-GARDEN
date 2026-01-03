@@ -38,7 +38,7 @@ class Requisition(models.Model):
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        related_name='requisition_project_name',
+        related_name='requisition_project_name_requisition',
         verbose_name="Project Name"
     )
     requisition_date = models.DateField()
@@ -48,7 +48,7 @@ class Requisition(models.Model):
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        related_name='requisition_resource_name',
+        related_name='requisition_resource_name_requisition',
         verbose_name="Resource Name"
     )
     resource_unit_requisition = models.CharField(max_length=200, blank=True)
@@ -101,7 +101,7 @@ class Requisition(models.Model):
     )
 
     def __str__(self):
-        return f"{self.requisition_no} - {self.resource_name_requisition}"
+        return str(self.resource_name_requisition)
 
     class Meta:
         ordering = ['-created_at']
