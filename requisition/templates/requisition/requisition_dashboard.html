@@ -322,17 +322,32 @@ function printPreview() {
 
   // Sync input values so they appear in print
   section.querySelectorAll('input').forEach(input => {
-    input.setAttribute('value', input.value);
+    if (input.type === 'checkbox' || input.type === 'radio') {
+      if (input.checked) input.setAttribute('checked', 'checked');
+      else input.removeAttribute('checked');
+    } else {
+      input.setAttribute('value', input.value);
+    }
+  });
+  section.querySelectorAll('textarea').forEach(ta => {
+    ta.textContent = ta.value;
+  });
+  section.querySelectorAll('select').forEach(sel => {
+    [...sel.options].forEach(opt => {
+      if (opt.selected) opt.setAttribute('selected', 'selected');
+      else opt.removeAttribute('selected');
+    });
   });
 
   // Clone section so we can safely modify
   const clone = section.cloneNode(true);
 
-  // Respect Basic Information toggle state
+  // Respect Basic Information toggle state (use computed style)
   const basicInfoClone = clone.querySelector('#formContent-basic-information');
   const basicInfoOriginal = section.querySelector('#formContent-basic-information');
   if (basicInfoClone && basicInfoOriginal) {
-    basicInfoClone.style.display = basicInfoOriginal.style.display;
+    const computedDisplay = window.getComputedStyle(basicInfoOriginal).display;
+    basicInfoClone.style.display = computedDisplay;
   }
 
   // Remove Status & Actions columns from tables
@@ -367,7 +382,6 @@ function printPreview() {
 
           /* Hide Basic Information heading, but show its labels + inputs */
           .form-card .section-title { display: none !important; }
-          /* Removed forced display:block for #formContent-basic-information */
 
           /* Ensure labels and inputs are aligned left/right */
           .form-row { display: flex; justify-content: space-between; margin-bottom: 8px; }
