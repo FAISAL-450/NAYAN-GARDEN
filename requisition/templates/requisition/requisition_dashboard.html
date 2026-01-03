@@ -328,10 +328,11 @@ function printPreview() {
   // Clone section so we can safely modify
   const clone = section.cloneNode(true);
 
-  // Force Basic Information section content to be visible
-  const basicInfo = clone.querySelector('#formContent-basic-information');
-  if (basicInfo) {
-    basicInfo.style.display = 'block';
+  // Respect Basic Information toggle state
+  const basicInfoClone = clone.querySelector('#formContent-basic-information');
+  const basicInfoOriginal = section.querySelector('#formContent-basic-information');
+  if (basicInfoClone && basicInfoOriginal) {
+    basicInfoClone.style.display = basicInfoOriginal.style.display;
   }
 
   // Remove Status & Actions columns from tables
@@ -366,7 +367,7 @@ function printPreview() {
 
           /* Hide Basic Information heading, but show its labels + inputs */
           .form-card .section-title { display: none !important; }
-          #formContent-basic-information { display: block !important; }
+          /* Removed forced display:block for #formContent-basic-information */
 
           /* Ensure labels and inputs are aligned left/right */
           .form-row { display: flex; justify-content: space-between; margin-bottom: 8px; }
