@@ -346,13 +346,19 @@ function printPreview() {
   const content = clone.outerHTML;
   const printWindow = window.open('', 'print-preview', 'width=900,height=700');
 
+  // IMPORTANT: empty title helps remove top-left header in some browsers
   const html = `
     <!DOCTYPE html>
     <html>
       <head>
-        <title>Print Preview</title>
+        <title></title>
         <link rel="stylesheet" href="{% static 'css/print.css' %}">
         <style>
+          /* Page margins must be declared at top-level, not inside @media */
+          @page {
+            margin: 15mm; /* adjust as needed */
+          }
+
           /* Hide unnecessary sections */
           .form-section, .filter-section { display: none !important; }
           .action-btn, .print-controls { display: none !important; }
@@ -398,9 +404,12 @@ function printPreview() {
       </head>
       <body>
         ${content}
-
         <script>
-          window.onload = function() { setTimeout(() => window.print(), 200); };
+          // Ensure the window has focus and then trigger print
+          window.onload = function() {
+            document.title = ''; // double-clear title for print headers
+            setTimeout(() => window.print(), 200);
+          };
         <\/script>
       </body>
     </html>
@@ -937,24 +946,6 @@ td {
 .print-button:hover {
   background-color: #005fa3;   /* darker blue on hover */
 }
-
-
-
-/* Print-specific adjustments */
-@media print {
-  .whole-page {
-    max-width: 100%;   /* use full width on paper */
-    margin: 0;         /* remove auto-centering margins */
-    padding: 20px;     /* adjust padding for print */
-  }
-
-  /* Hide browser headers/footers (title + URL) */
-  @page {
-    margin: 20mm;      /* control page margins */
-  }
-}
-
-
 
 /* Keyframes: move left then return */
 @keyframes moveLeft {
