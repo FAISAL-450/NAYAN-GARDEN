@@ -938,6 +938,24 @@ td {
   background-color: #005fa3;   /* darker blue on hover */
 }
 
+
+
+/* Print-specific adjustments */
+@media print {
+  .whole-page {
+    max-width: 100%;   /* use full width on paper */
+    margin: 0;         /* remove auto-centering margins */
+    padding: 20px;     /* adjust padding for print */
+  }
+
+  /* Hide browser headers/footers (title + URL) */
+  @page {
+    margin: 20mm;      /* control page margins */
+  }
+}
+
+
+
 /* Keyframes: move left then return */
 @keyframes moveLeft {
   0%   { left: 0; }
