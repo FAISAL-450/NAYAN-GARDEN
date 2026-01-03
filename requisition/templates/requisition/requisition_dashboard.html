@@ -346,19 +346,13 @@ function printPreview() {
   const content = clone.outerHTML;
   const printWindow = window.open('', 'print-preview', 'width=900,height=700');
 
-  // IMPORTANT: empty title helps remove top-left header in some browsers
   const html = `
     <!DOCTYPE html>
     <html>
       <head>
-        <title></title>
+        <title>Print Preview</title>
         <link rel="stylesheet" href="{% static 'css/print.css' %}">
         <style>
-          /* Page margins must be declared at top-level, not inside @media */
-          @page {
-            margin: 15mm; /* adjust as needed */
-          }
-
           /* Hide unnecessary sections */
           .form-section, .filter-section { display: none !important; }
           .action-btn, .print-controls { display: none !important; }
@@ -404,12 +398,9 @@ function printPreview() {
       </head>
       <body>
         ${content}
+
         <script>
-          // Ensure the window has focus and then trigger print
-          window.onload = function() {
-            document.title = ''; // double-clear title for print headers
-            setTimeout(() => window.print(), 200);
-          };
+          window.onload = function() { setTimeout(() => window.print(), 200); };
         <\/script>
       </body>
     </html>
