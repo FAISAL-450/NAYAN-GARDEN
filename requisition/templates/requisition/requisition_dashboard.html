@@ -320,7 +320,7 @@ function printPreview() {
     return;
   }
 
-  // Sync input values so they appear in print
+  // Sync input values
   section.querySelectorAll('input').forEach(input => {
     input.setAttribute('value', input.value);
   });
@@ -328,18 +328,12 @@ function printPreview() {
   // Clone section so we can safely modify
   const clone = section.cloneNode(true);
 
-  // Force Basic Information section content to be visible
-  const basicInfo = clone.querySelector('#formContent-basic-information');
-  if (basicInfo) {
-    basicInfo.style.display = 'block';
-  }
-
-  // Remove Status & Actions columns from tables
+  // Find table and remove Status (col 9) & Actions (col 10)
   clone.querySelectorAll('table').forEach(table => {
     table.querySelectorAll('tr').forEach(row => {
       const cells = row.querySelectorAll('th, td');
-      if (cells[9]) cells[9].remove();   // Remove Status (if exists)
-      if (cells[10]) cells[10].remove(); // Remove Actions (if exists)
+      if (cells[9]) cells[9].remove();   // Remove Status
+      if (cells[10]) cells[10].remove(); // Remove Actions
     });
   });
 
@@ -353,35 +347,19 @@ function printPreview() {
         <title>Print Preview</title>
         <link rel="stylesheet" href="{% static 'css/print.css' %}">
         <style>
-          /* Hide unnecessary sections */
           .form-section, .filter-section { display: none !important; }
+          #formContent { display: block !important; }
           .action-btn, .print-controls { display: none !important; }
-
-          /* Table styling */
           table { border-collapse: collapse; width: 100%; }
           th, td { border: 1px solid #333; padding: 6px; }
 
-          /* Keep Purchase Requisition heading visible */
-          .section-title-PR { display: block !important; }
-
-          /* Hide Basic Information heading, but show its labels + inputs */
+          /* 🎯 Hide headings in Print Preview */
           .form-card .section-title { display: none !important; }
-          #formContent-basic-information { display: block !important; }
-
-          /* Ensure labels and inputs are aligned left/right */
-          .form-row { display: flex; justify-content: space-between; margin-bottom: 8px; }
-          .form-row label { flex: 1; font-weight: bold; }
-          .form-row input { flex: 2; border: 1px solid #333; padding: 4px; }
-
-          /* Hide requisition form heading */
-          .form-section header { display: none !important; }
-
-          /* Hide requisition list heading */
           .table-section .table-header { display: none !important; }
 
-          /* Footer styling */
+          /* 📌 Push footer down from table */
           .table-footer {
-            margin-top: 200px;
+            margin-top: 200px;   /* space below table */
             text-align: left;
             font-weight: bold;
           }
