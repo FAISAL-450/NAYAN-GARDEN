@@ -220,20 +220,22 @@
 <!-- 🔧 Toggle Script-(Basic Information)-->
 <script>
   document.addEventListener('DOMContentLoaded', function () {
-    const section = "basic-information"; // section identifier
+    const section = "basic-information";
     const form = document.getElementById(`formContent-${section}`);
     const btn = document.getElementById(`toggle-btn-${section}`);
-    const mode = "{{ mode }}";
+    const mode = "{{ mode }}"; // must be provided by template
 
     // Initial state
     if (mode === "edit" && form && btn) {
       form.style.display = 'block';
       btn.classList.remove('btn-red');
       btn.classList.add('btn-blue');
+      btn.textContent = "Hide";
     } else if (form && btn) {
       form.style.display = 'none';
       btn.classList.remove('btn-blue');
       btn.classList.add('btn-red');
+      btn.textContent = "Show";
     }
 
     // Toggle function
@@ -246,6 +248,7 @@
       formEl.style.display = isHidden ? 'block' : 'none';
       btnEl.classList.toggle('btn-blue', isHidden);
       btnEl.classList.toggle('btn-red', !isHidden);
+      btnEl.textContent = isHidden ? "Hide" : "Show";
     };
 
     // Attach click event
@@ -906,22 +909,6 @@ td {
 .print-button:hover {
   background-color: #005fa3;   /* darker blue on hover */
 }
-
-
-
-.form-card {
-  height: 22px;          
-  display: flex;
-  align-items: center;       /* vertical alignment: center */
-  justify-content: flex-start; /* horizontal alignment: left */
-  border: 1px solid #fdfdfd; 
-  border-radius: 8px;
-  margin-bottom: 20px;
-  overflow: hidden;  
-
-}
-
-
 
 /* Keyframes: move left then return */
 @keyframes moveLeft {
