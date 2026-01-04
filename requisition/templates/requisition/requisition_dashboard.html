@@ -322,32 +322,16 @@ function printPreview() {
 
   // Sync input values so they appear in print
   section.querySelectorAll('input').forEach(input => {
-    if (input.type === 'checkbox' || input.type === 'radio') {
-      if (input.checked) input.setAttribute('checked', 'checked');
-      else input.removeAttribute('checked');
-    } else {
-      input.setAttribute('value', input.value);
-    }
-  });
-  section.querySelectorAll('textarea').forEach(ta => {
-    ta.textContent = ta.value;
-  });
-  section.querySelectorAll('select').forEach(sel => {
-    [...sel.options].forEach(opt => {
-      if (opt.selected) opt.setAttribute('selected', 'selected');
-      else opt.removeAttribute('selected');
-    });
+    input.setAttribute('value', input.value);
   });
 
   // Clone section so we can safely modify
   const clone = section.cloneNode(true);
 
-  // Respect Basic Information toggle state (use computed style)
-  const basicInfoClone = clone.querySelector('#formContent-basic-information');
-  const basicInfoOriginal = section.querySelector('#formContent-basic-information');
-  if (basicInfoClone && basicInfoOriginal) {
-    const computedDisplay = window.getComputedStyle(basicInfoOriginal).display;
-    basicInfoClone.style.display = computedDisplay;
+  // Force Basic Information section content to be visible
+  const basicInfo = clone.querySelector('#formContent-basic-information');
+  if (basicInfo) {
+    basicInfo.style.display = 'block';
   }
 
   // Remove Status & Actions columns from tables
@@ -382,6 +366,7 @@ function printPreview() {
 
           /* Hide Basic Information heading, but show its labels + inputs */
           .form-card .section-title { display: none !important; }
+          #formContent-basic-information { display: block !important; }
 
           /* Ensure labels and inputs are aligned left/right */
           .form-row { display: flex; justify-content: space-between; margin-bottom: 8px; }
