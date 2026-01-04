@@ -230,12 +230,12 @@
       form.style.display = 'block';
       btn.classList.remove('btn-red');
       btn.classList.add('btn-blue');
-      btn.textContent = "Hide";
+      // removed btn.textContent = "Hide";
     } else if (form && btn) {
       form.style.display = 'none';
       btn.classList.remove('btn-blue');
       btn.classList.add('btn-red');
-      btn.textContent = "Show";
+      // removed btn.textContent = "Show";
     }
 
     // Toggle function
@@ -248,7 +248,7 @@
       formEl.style.display = isHidden ? 'block' : 'none';
       btnEl.classList.toggle('btn-blue', isHidden);
       btnEl.classList.toggle('btn-red', !isHidden);
-      btnEl.textContent = isHidden ? "Hide" : "Show";
+      // removed btnEl.textContent updates
     };
 
     // Attach click event
@@ -323,7 +323,7 @@ function printPreview() {
     return;
   }
 
-  // Sync input values
+  // Sync input values so they appear in print
   section.querySelectorAll('input').forEach(input => {
     input.setAttribute('value', input.value);
   });
@@ -331,12 +331,18 @@ function printPreview() {
   // Clone section so we can safely modify
   const clone = section.cloneNode(true);
 
-  // Find table and remove Status (col 9) & Actions (col 10)
+  // Force Basic Information section content to be visible
+  const basicInfo = clone.querySelector('#formContent-basic-information');
+  if (basicInfo) {
+    basicInfo.style.display = 'block';
+  }
+
+  // Remove Status & Actions columns from tables
   clone.querySelectorAll('table').forEach(table => {
     table.querySelectorAll('tr').forEach(row => {
       const cells = row.querySelectorAll('th, td');
-      if (cells[9]) cells[9].remove();   // Remove Status
-      if (cells[10]) cells[10].remove(); // Remove Actions
+      if (cells[9]) cells[9].remove();   // Remove Status (if exists)
+      if (cells[10]) cells[10].remove(); // Remove Actions (if exists)
     });
   });
 
@@ -350,19 +356,44 @@ function printPreview() {
         <title>Print Preview</title>
         <link rel="stylesheet" href="{% static 'css/print.css' %}">
         <style>
+          /* Hide unnecessary sections */
           .form-section, .filter-section { display: none !important; }
-          #formContent { display: block !important; }
           .action-btn, .print-controls { display: none !important; }
+
+          /* Table styling */
           table { border-collapse: collapse; width: 100%; }
           th, td { border: 1px solid #333; padding: 6px; }
 
-          /* 🎯 Hide headings in Print Preview */
+          /* Keep Purchase Requisition heading visible */
+          .section-title-PR { display: block !important; }
+
+          /* Hide Basic Information heading, but show its labels + inputs */
           .form-card .section-title { display: none !important; }
+          #formContent-basic-information { display: block !important; }
+
+          /* Ensure labels and inputs are aligned left/right */
+          .form-row { display: flex; justify-content: space-between; margin-bottom: 8px; }
+          .form-row label { flex: 1; font-weight: bold; }
+          .form-row input { flex: 2; border: 1px solid #333; padding: 4px; }
+
+          /* Print override: remove borders from inputs */
+          @media print {
+            .form-row input {
+              border: none !important;
+              outline: none !important;
+              background: transparent !important;
+            }
+          }
+
+          /* Hide requisition form heading */
+          .form-section header { display: none !important; }
+
+          /* Hide requisition list heading */
           .table-section .table-header { display: none !important; }
 
-          /* 📌 Push footer down from table */
+          /* Footer styling */
           .table-footer {
-            margin-top: 200px;   /* space below table */
+            margin-top: 200px;
             text-align: left;
             font-weight: bold;
           }
